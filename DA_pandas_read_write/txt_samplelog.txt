@@ -1,0 +1,12 @@
+# sample log file
+# 
+white,red,blue,green,animal
+12-Feb-2021: Counting of animals inside the house
+1,5,2,3,cat
+2,7,8,5,dog
+12,27,18,5,monkey
+13-Feb-2021: Counting of animals outside the house
+3,3,6,7,horse
+2,2,8,3,duck
+4,4,2,1,mouse
+44,55,66,67,cow

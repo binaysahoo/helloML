@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Catalog>
+    <Book id="bookid_11">
+        <Author>Binay, Sahoo</Author>
+        <Title>useless codings</Title>
+        <Genre>Computer</Genre>
+        <Price>23.56</Price>
+        <PublishDate>2021-22-01</PublishDate>
+    </Book>
+    <Book id="bookid_12">
+        <Author>Firstname, Last Name</Author>
+        <Title>XML for Dummies</Title>
+        <Genre>Computer</Genre>
+        <Price>35.95</Price>
+        <PublishDate>2019-12-16</PublishDate>
+    </Book>
+</Catalog>
