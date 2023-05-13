@@ -16,7 +16,7 @@ my $server = IO::Socket::UNIX->new(
 ) or die "Couldn't create server socket: $!";
 
 print "Server is listening on $socket_path\n";
-
+my $testid = 0; 
 # Accept client connections
 while (my $client = $server->accept()) {
     print "Client connected\n";
@@ -38,8 +38,11 @@ while (my $client = $server->accept()) {
         # Send response back to the client
         my $response = { "status" => "OK"}; 
         if ($action =~ /gettest/i ){
+          $testid++;
           my $testidx = int(rand(100)) + 1; 
-          $response = { "status" => "OK" , "testcase" => "testcase_$testidx" } ; 
+          my $testcase = "testcase_$testidx";
+          $testcase = 'NA' if($testid eq 3); 
+          $response = { "status" => "OK" , "testcase" => "$testcase" } ; 
         }elsif ($action =~ /testinfo/i){
           print "ACTION:$action INFO:" . Dumper($jsondata) . "\n";
         }elsif ($action =~ /testdone/i){
