@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 use IO::Socket::UNIX;
+use JSON;
+use Data::Dumper;
 
 my $socket_path = '/tmp/mysocket.sock';
 
@@ -22,14 +24,30 @@ while (my $client = $server->accept()) {
     # Read input from the client
     while (my $input = <$client>) {
         chomp $input;
-        print "Received from client: $input\n";
-        
+        my $jsondata = decode_json($input); 
+        print "Received from client:" . Dumper($jsondata);
         # Process the input as needed
-        
+        my $action = $jsondata->{action} // 'testdone';  
+        #========================================================================================== 
+        # request from client         | response to client
+        #------------------------------------------------------------------------------------------
+        # { action => "gettest" } | respose: { testcase => "name|NA","status" => "OK" } 
+        # { action => "testinfo", pid => 123, rundir => "rundirname", runoption => "" , runlog => "" }   | response { "status => "OK" }
+        # { action => "testdone" } | respose: { "status" => "OK" } 
+        #========================================================================================== 
         # Send response back to the client
-        my $response = "Server response for: $input\n";
-        print $client $response;
-        print "Sent to client: $response\n";
+        my $response = { "status" => "OK"}; 
+        if ($action =~ /gettest/i ){
+          my $testidx = int(rand(100)) + 1; 
+          $response = { "status" => "OK" , "testcase" => "testcase_$testidx" } ; 
+        }elsif ($action =~ /testinfo/i){
+          print "ACTION:$action INFO:" . Dumper($jsondata) . "\n";
+        }elsif ($action =~ /testdone/i){
+          print "ACTION:$action | DONE\n";
+        }
+
+        print "Action: $action | SENDING:" .encode_json($response) . "\n";
+        print $client encode_json($response) . "\n";
     }
     
     close $client;
