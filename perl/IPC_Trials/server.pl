@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 use IO::Socket::UNIX;
-use JSON;
-use Data::Dumper;
 
 my $socket_path = '/tmp/mysocket.sock';
 
@@ -24,15 +22,13 @@ while (my $client = $server->accept()) {
     # Read input from the client
     while (my $input = <$client>) {
         chomp $input;
-        my $jsondata = decode_json($input); 
-
-        print "Received from client:" . Dumper($jsondata);
+        print "Received from client: $input\n";
         
         # Process the input as needed
         
         # Send response back to the client
-        my $response = {"message"=>"Success","action"=>"send_case","case_name"=>"unit_FPGA/", "req" => $jsondata}; 
-        print $client encode_json($response) . "\n";
+        my $response = "Server response for: $input\n";
+        print $client $response;
         print "Sent to client: $response\n";
     }
     
