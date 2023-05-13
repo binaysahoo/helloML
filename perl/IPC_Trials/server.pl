@@ -25,7 +25,7 @@ while (my $client = $server->accept()) {
     while (my $input = <$client>) {
         chomp $input;
         my $jsondata = decode_json($input); 
-        print "Received from client:" . Dumper($jsondata);
+        #print "Received from client:" . Dumper($jsondata);
         # Process the input as needed
         my $action = $jsondata->{action} // 'testdone';  
         #========================================================================================== 

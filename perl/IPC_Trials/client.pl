@@ -31,6 +31,12 @@ while ((my $testcase = get_testcase($client) ) ne 'NA' ) {
           run_test($testcase);
         }else{  # parent process
           print "Running Child PID:$pid\n"; 
+	  my $data = { action => "testinfo", pid => $pid, rundir => "rundirname", runoption => "" , runlog => "" };
+	  # send test run info
+	  my $resp = send_rec_socket($client,$data); 
+	  print "RESP: " . Dumper ($resp) . "\n"; 
+
+          # wait 
           my $childstatus = waitpid($pid, 0);
           if($childstatus != -1 ){
             print "DONE CHILD PROCESS:$pid \n";
@@ -40,14 +46,7 @@ while ((my $testcase = get_testcase($client) ) ne 'NA' ) {
         } 
     }
 
-    my $data = { action => "testinfo", pid => $pid, rundir => "rundirname", runoption => "" , runlog => "" };
-    # send test run info
-    my $resp = send_rec_socket($client,$data); 
-    print "RESP: " . Dumper ($resp) . "\n"; 
 
-    #if ($testid eq 2 ) {   #run only 10 testcases
-        #last; #break the loop and DONE
-    #}
   
 } # while
 
