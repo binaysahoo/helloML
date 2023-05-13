@@ -1,30 +1,40 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 use IO::Socket::UNIX;
+use JSON;
+use Data::Dumper;
 
 my $socket_path = '/tmp/mysocket.sock';
-
-# Connect to the server socket
-my $socket = IO::Socket::UNIX->new(
-    Peer => $socket_path,
+my $client = IO::Socket::UNIX->new(
     Type => SOCK_STREAM,
-) or die "Couldn't connect to server socket: $!";
+    Peer => $socket_path
+) or die "Failed to create client socket: $!";
 
-# Send input to the server
-my @inputs = ("Hello", "World", "quit");
-foreach my $input (@inputs) {
-    print $socket "$input\n";
-    print "Sent to server: $input\n";
-    
-    # Read response from the server
-    my $response = <$socket>;
-    chomp $response;
-    print "Received from server: $response\n";
-    sleep 1; 
-    last if $input eq 'quit';  # Terminate the client if 'quit' is sent
+
+for my $idx (1..10){
+  my $data = { action => "name", idx => $idx };
+  my $json_data = encode_json($data);
+
+  print $client "$json_data\n";
+  
+  #shutdown($client, 1);    # incase SEND DATA SOCKET to be CLOSED and RECEIVE to remain OPEN
+  print "CLIENT SEND idx:$idx\n";  
+  my $resp = read_socket($client);
+  print "RESPONSE: " . Dumper($resp); 
+  sleep 1; 
+} 
+
+sub read_socket(){
+   my $socket  = shift;  
+   while (my $response = <$socket> ) {
+      chomp $response;
+      my $res = decode_json($response);
+      return $res;
+  }
+
 }
 
-close $socket;
+
+
+close $client;
 
