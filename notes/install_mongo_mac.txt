@@ -1,0 +1,38 @@
+
+1. wget https://fastdl.mongodb.org/osx/mongodb-macos-x86_64-5.0.18.tgz 
+
+2. tar -xvzf mongodb-macos-x86_64-5.0.18.tgz
+
+3. cd mongodb-macos-x86_64-5.0.18/bin
+
+4.  # create data directory /tmp/mydatabase
+
+5. #start mongod server
+   ./mongod --dbpath /tmp/mydatabase   
+
+   or 
+
+   ./mongodb -f /tmp/mymongo.cfg   # create a config file 
+
+
+6. run mongo client
+   ./mongo
+   
+7. show exisitng database
+
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mytest  0.000GB
+
+
+7. create db calle: mytestdb
+   > use mytestdb
+
+8. insert your details to usertable
+  > db.usertable.insert({"name":"binay"})
+
+9. query the records
+  > db.usertable.find().pretyy();
+  
