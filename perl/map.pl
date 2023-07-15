@@ -25,5 +25,5 @@ given ($value) {
 }
 
 foreach my $key (keys $test->{runs}->%*) {
-   print "Key : $key\n";
+   print "Key : $key | $test->{runs}->{$key}\n";
 }
