@@ -1,0 +1,56 @@
+const { MongoClient, BulkWriteOperation } = require('mongodb');
+
+const uri = 'mongodb://localhost:27017';
+const dbName = 'myDatabase';
+const collectionName = 'myCollection';
+
+async function upsertManyDocuments(dataList) {
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+
+    const filterField = 'name'; // Replace 'name' with the field you want to use for filtering
+    const updateFields = ['age', 'city']; // Replace with the fields you want to update or upsert
+
+    // Initialize bulk write operations
+    const bulkOperations = new BulkWriteOperation();
+
+    // Add upsert operations to the bulk write
+    dataList.forEach(data => {
+      const filter = { [filterField]: data[filterField] };
+      const update = { $set: pickFields(data, updateFields) };
+
+      bulkOperations
+        .find(filter)
+        .upsert()
+        .updateOne(update);
+    });
+
+    // Execute the bulk write
+    const result = await collection.bulkWrite(bulkOperations);
+
+    console.log(`Total documents modified: ${result.modifiedCount}`);
+    console.log(`Total documents upserted: ${result.upsertedCount}`);
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    client.close();
+  }
+}
+
+// Helper function to pick specific fields from an object
+function pickFields(obj, fields) {
+  return fields.reduce((acc, field) => ({ ...acc, [field]: obj[field] }), {});
+}
+
+// Example usage:
+const dataList = [
+  { name: 'John Doe', age: 30, city: 'New York' },
+  { name: 'Jane Smith', age: 25, city: 'Los Angeles' },
+  // Add more data dictionaries as needed
+];
+
+upsertManyDocuments(dataList);
