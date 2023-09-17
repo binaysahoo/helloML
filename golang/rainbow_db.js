@@ -69,3 +69,44 @@ db.getCollection('regdata').aggregate([
     $project: { _id: 0, test: '$_id' }
   }
 ]);
+
+
+db.regdata.aggregate([
+  {   
+    $match: {
+      $and: [
+        {
+          $and: [
+            { sdate: { $lte: ISODate('2023-09-01T00:00:00Z') } },
+            { edate: { $gte: ISODate('2023-09-01T00:00:00Z') } },
+          ],
+        },
+        {
+          $and: [
+            { sdate: { $lte: ISODate('2023-09-03T23:59:59Z') } },
+            { edate: { $gte: ISODate('2023-09-03T23:59:59Z') } },
+          ],
+        },
+      ],
+    },    
+  },
+  {
+    $group:{
+      _id: "$test",   
+      failCount: { $sum: { $cond: [ {$eq: ["$status", "fail"]}, 1, 0,], }, },
+      passCount: { $sum: { $cond: [ {$eq: ["$status", "pass"]}, 1, 0,], }, },
+    }
+  },
+  {
+    $match: { failCount: 0 }
+  },
+  {
+    $project: {  _id: 0,test: '$_id' }
+  },
+  {
+    $group: {  _id: null, tests: { $push: '$test' } }
+  },
+  {
+    $project: { _id: 0, tests: 1 }
+  }
+])
