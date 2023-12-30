@@ -15,43 +15,22 @@ print $fh <<EOF;
 <html>
 <head>
     <title>Side Nav with Content</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Style for the side navigation */
-        .sidenav {
-            height: 100%;
-            width: 250px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #f1f1f1;
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-        .sidenav a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 18px;
-            color: black;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            background-color: #ddd;
-        }
-
-        /* Style for the main content area */
+        /* Custom style for the main content area */
         .main {
-            margin-left: 250px;
             padding: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="sidenav">
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
 EOF
 
 # Subroutine to generate dropdowns and links
@@ -72,25 +51,22 @@ sub process_dir {
     closedir($dh);
 
     if (@subdirs) {
-        print $fh "<ul>\n";
         foreach my $subdir (@subdirs) {
-            print $fh "<li class='dropdown'>$subdir\n";
-            print $fh "<ul class='nested'>\n";
+            print $fh "<li class='nav-item dropdown'>\n";
+            print $fh "<a class='nav-link dropdown-toggle' href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>$subdir</a>\n";
+            print $fh "<ul class='dropdown-menu'>\n";
             process_dir("$dir/$subdir");
             print $fh "</ul>\n";
             print $fh "</li>\n";
         }
-        print $fh "</ul>\n";
     }
 
     if (@files) {
-        print $fh "<ul>\n";
         foreach my $file (@files) {
             my $file_path = "$dir/$file";
             my $file_name = $file;
-            print $fh "<li><a href='$file_path' class='file-link'>$file_name</a></li>\n";
+            print $fh "<li class='nav-item'><a class='nav-link file-link' href='$file_path'>$file_name</a></li>\n";
         }
-        print $fh "</ul>\n";
     }
 }
 
@@ -99,10 +75,16 @@ process_dir($base_dir);
 
 # Write HTML footer and JavaScript
 print $fh <<EOF;
-</div>
+                </ul>
+            </div>
+        </nav>
 
-<div class="main" id="mainContent">
-    <!-- Page content will be loaded here -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="main" id="mainContent">
+                <!-- Page content will be loaded here -->
+            </div>
+        </main>
+    </div>
 </div>
 
 <script>
@@ -114,19 +96,9 @@ print $fh <<EOF;
             $('#mainContent').html('<pre>' + data + '</pre>');
         });
     });
-
-    // Script to handle dropdown functionality
-    $('.dropdown').on('click', function() {
-        $(this).toggleClass("active");
-        var nested = $(this).next();
-        if (nested.css('display') === 'block') {
-            nested.css('display', 'none');
-        } else {
-            nested.css('display', 'block');
-        }
-    });
 </script>
 
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 EOF
