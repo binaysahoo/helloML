@@ -5,41 +5,36 @@ use File::Find;
 use File::Basename;
 
 my $base_dir = '/path/to/your/source/files'; # Replace with the base directory path
-my $output_file = 'navigator.html'; # Output HTML file name
+my $output_file = 'navigator_bootstrap.html'; # Output HTML file name
 
 # Open output file for writing
 open(my $fh, '>', $output_file) or die "Cannot open file '$output_file' for writing: $!";
 
-# Write HTML header
+# Write HTML header with Bootstrap CDN links
 print $fh <<EOF;
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Left Side Navigator</title>
+    <title>Bootstrap Left Side Navigator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .dropdown {
+        .dropdown-submenu {
             position: relative;
-            display: inline-block;
         }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
         }
     </style>
 </head>
 <body>
-    <h1>Left Side Navigator</h1>
-    <ul>
+    <div class="container">
+        <h1>Bootstrap Left Side Navigator</h1>
+        <div class="list-group">
 EOF
 
-# Subroutine to generate dropdowns and links
+# Subroutine to generate list items for directories and files
 sub process_dir {
     my ($dir) = @_;
     my @subdirs;
@@ -56,33 +51,30 @@ sub process_dir {
     }
     closedir($dh);
 
-    if (@subdirs) {
-        print $fh "<ul>\n";
-        foreach my $subdir (@subdirs) {
-            print $fh "<li class='dropdown'>$subdir\n";
-            process_dir("$dir/$subdir");
-            print $fh "</li>\n";
-        }
-        print $fh "</ul>\n";
+    foreach my $subdir (@subdirs) {
+        print $fh "<a href='#' class='list-group-item list-group-item-action list-group-item-primary dropdown-toggle' data-toggle='dropdown'>$subdir</a>\n";
+        print $fh "<div class='dropdown-menu'>\n";
+        process_dir("$dir/$subdir");
+        print $fh "</div>\n";
     }
 
-    if (@files) {
-        print $fh "<ul>\n";
-        foreach my $file (@files) {
-            my $file_path = "$dir/$file";
-            my $file_name = basename($file_path);
-            print $fh "<li><a href='$file_path'>$file_name</a></li>\n";
-        }
-        print $fh "</ul>\n";
+    foreach my $file (@files) {
+        my $file_path = "$dir/$file";
+        my $file_name = basename($file_path);
+        print $fh "<a href='$file_path' class='list-group-item list-group-item-action'>$file_name</a>\n";
     }
 }
 
 # Call the subroutine for the base directory
 process_dir($base_dir);
 
-# Write HTML footer
+# Write HTML footer with Bootstrap JavaScript CDN link
 print $fh <<EOF;
-    </ul>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 EOF
