@@ -83,3 +83,7 @@ EOF
 close($fh);
 
 print "HTML file '$output_file' generated successfully.\n";
+
+#
+#sudo yum install -y wget
+#sudo wget -O /etc/yum.repos.d/adoptopenjdk.repo https://adoptopenjdk.jfrog.io/adoptopenjdk/rpm/centos/adoptopenjdk.repo
