@@ -1,4 +1,6 @@
 
+## https://www.nextplatform.com/2015/04/21/teaching-grid-engine-to-speak-mesos/ 
+
 https://blog.griddynamics.com/more-details-on-building-cloud-portable-devops-stack-with-mesos-and-marathon/
 
 ## apache messos
