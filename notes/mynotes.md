@@ -7,7 +7,9 @@ https://blog.griddynamics.com/more-details-on-building-cloud-portable-devops-sta
 ## https://kb.iu.edu/d/avmy    - TORQUE MPI (message passing interface)
 # like qsub , qdel , qstat , showq    - --- is it similar to UGE or LSF?
 ## https://docs.adaptivecomputing.com/torque/4-0-2/help.htm#topics/2-jobs/submittingManagingJobs.htm 
-
+## https://slurm.schedmd.com/quickstart.html
+## https://openpbs.org/ 
+## https://slurm.schedmd.com/mpi_guide.html#intel_mpirun_hydra 
 ## apache messos
 
 Extendable architecture via support for pluggable frameworks. The true power of Mesos as a platform comes with extendable architecture that allows additional features to be delivered via pluggable “frameworks.” Examples of features delivered by the pluggable framework include support for long-running services, batch scheduling, big data processing and data storage. Marathon is one such framework. Many frameworks already exist for common use cases, and it’s fairly easy to add a custom one if needed:
