@@ -1,7 +1,7 @@
 Apache Mesos is typically used as a standalone cluster manager, and Kubernetes is a separate container orchestration platform. However, if you want to run Apache Mesos on Kubernetes, there is an integration project called Mesos Kubernetes (MKS). MKS allows you to run Mesos tasks as Kubernetes pods.
 
 Here's a simplified guide for setting up Mesos Master and Mesos Slaves using Kubernetes virtualization:
-
+### https://github.com/mesosphere-backup/docker-containers/tree/master/mesos 
 ### Prerequisites:
 
 1. Have Kubernetes installed on your machine or cluster.
