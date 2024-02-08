@@ -2,6 +2,9 @@ Apache Mesos is typically used as a standalone cluster manager, and Kubernetes i
 
 Here's a simplified guide for setting up Mesos Master and Mesos Slaves using Kubernetes virtualization:
 ### https://github.com/mesosphere-backup/docker-containers/tree/master/mesos 
+
+### https://spark.apache.org/docs/latest/running-on-mesos.html#installing-mesos 
+
 ### Prerequisites:
 
 1. Have Kubernetes installed on your machine or cluster.
