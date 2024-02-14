@@ -1,5 +1,26 @@
 ### http://events17.linuxfoundation.org/events/archive/2017/mesoscon-europe/program/slides
 
+### https://mesos.apache.org/documentation/latest/building/
+### macOS X
+
+# Install Python 3: https://www.python.org/downloads/
+
+# Install Command Line Tools. The Command Line Tools from XCode >= 8.0 are required.
+$ xcode-select --install
+
+# Install Homebrew.
+$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# Install Java.
+$ brew install Caskroom/cask/java
+
+# Install libraries.
+$ brew install wget git autoconf automake libtool subversion maven xz
+
+# Install Python dependencies.
+$ sudo easy_install pip
+$ pip install virtualenv
+
 ##  https://mesosphere.github.io/marathon/
 
 ## https://www.nextplatform.com/2015/04/21/teaching-grid-engine-to-speak-mesos/ 
