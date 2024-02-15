@@ -1,5 +1,7 @@
 ## https://kafka.apache.org/quickstart
 
+## https://kafka.apache.org/intro
+
 Apache Kafka
 GET STARTED
 DOCS
