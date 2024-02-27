@@ -112,3 +112,44 @@ fetch_task >> group_task >> submit_task >> monitor_task
 This example demonstrates a simple Airflow DAG with tasks for fetching test cases from MongoDB, grouping them, submitting batches to LSF, and monitoring LSF jobs. You'll need to replace the placeholder functions (`fetch_test_cases`, `group_test_cases`, `submit_to_lsf`) with your actual logic. Adjust the DAG configuration and tasks based on your specific requirements and environment.
 
 Ensure you have the necessary Airflow plugins, MongoDB libraries, and LSF command-line tools installed in your Airflow environment for this DAG to work. This example is a starting point, and you may need to adapt it according to your specific use case and environment.
+
+The Apache Airflow Web UI primarily provides a high-level view of DAGs, their runs, and task details. It does not directly provide a detailed web report for individual jobs submitted using the `bsub` command (from LSF or another job scheduler).
+
+For monitoring the status of all 10,000 test cases or jobs submitted through `bsub` and getting a detailed report at the job level, you would typically rely on the tools provided by the job scheduler itself. In the case of LSF, you might use commands like `bjobs`, `bhist`, or other LSF monitoring tools.
+
+Here's a basic example of how you might use a BashOperator in Airflow to periodically check the status of LSF jobs and log the output:
+
+```python
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'lsf_job_monitoring',
+    default_args=default_args,
+    description='DAG for monitoring LSF jobs',
+    schedule_interval=timedelta(minutes=15),  # Adjust this based on your requirements
+)
+
+monitor_lsf_jobs = BashOperator(
+    task_id='monitor_lsf_jobs',
+    bash_command='bjobs',
+    dag=dag,
+)
+
+monitor_lsf_jobs
+```
+
+This example uses a BashOperator to execute the `bjobs` command, which lists the status of LSF jobs. You can schedule this task at regular intervals to get updates on the status of your submitted jobs.
+
+Keep in mind that the specifics of LSF commands and how you monitor jobs may vary depending on your LSF configuration and version. Adjust the Bash command in the `BashOperator` accordingly.
+
+For a comprehensive solution, you might want to explore more advanced integrations or custom solutions that aggregate and visualize job statuses from your job scheduler alongside Airflow DAG information.
