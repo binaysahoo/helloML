@@ -194,3 +194,55 @@ In this example, the `submit_lsf_job` task uses the `BashOperator` to execute th
 Keep in mind that the integration details will depend on your specific LSF setup and requirements. If you need more advanced features or specific integrations, you might consider developing a custom operator or exploring third-party solutions.
 
 Always check the official Airflow documentation and community resources for the latest updates, plugins, and integrations that may have been developed since my last update in January 2022.
+
+
+In Apache Airflow, the `BashOperator` is a commonly used operator for running Bash commands or scripts as tasks within a DAG (Directed Acyclic Graph). While the `BashOperator` itself does not provide direct integration with cgroups, you can use the `cgexec` command to run the Bash script within a specific cgroup from within the BashOperator.
+
+Here's an example of how you might use `cgexec` with `BashOperator` in Airflow:
+
+```python
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+
+default_args = {
+    'owner': 'your_username',
+    'start_date': datetime(2022, 1, 1),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'cgroups_example_dag',
+    default_args=default_args,
+    description='An example DAG with BashOperator and cgroups',
+    schedule_interval=None,
+)
+
+# Bash script content (your_script.sh)
+bash_script = """
+#!/bin/bash
+
+# Your Bash script content here
+echo "Hello from the Bash script!"
+
+"""
+
+# Create a BashOperator with cgroups
+bash_task = BashOperator(
+    task_id='run_bash_script',
+    bash_command='sudo cgexec -g memory:/my_cgroup bash -c \'{}\''.format(bash_script),
+    dag=dag,
+)
+
+if __name__ == "__main__":
+    dag.cli()
+```
+
+In this example:
+
+1. The Bash script content is defined as a multiline string (`bash_script`).
+2. The `BashOperator` (`bash_task`) is created with the `bash_command` parameter set to execute the Bash script within the specified cgroup using `cgexec`.
+3. The `sudo cgexec -g memory:/my_cgroup` part of the command sets up the cgroup configuration, and `bash -c '{}'` executes the Bash script content.
+
+Please note that using `sudo` within the `BashOperator` may require additional configuration in the Airflow environment, and the user running Airflow should have the necessary permissions to execute `sudo` commands. Ensure that your cgroup configuration is set up appropriately for your resource management needs. Adjust the script and cgroup configurations based on your specific requirements.
