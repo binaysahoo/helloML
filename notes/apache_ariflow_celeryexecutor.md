@@ -198,3 +198,76 @@ Here are some considerations:
 In summary, while you can centralize code and configurations, it's common to have local installations of Apache Airflow on each machine for task execution. The shared file system is mainly used for code synchronization and configuration management. This approach provides flexibility, scalability, and isolation for task execution across the distributed environment.
 
 
+If installing PostgreSQL on all 100 machines is challenging, you can use a centralized PostgreSQL database to store metadata for Apache Airflow. This approach involves configuring each Airflow instance to connect to the shared PostgreSQL database for metadata storage. Here's how you can achieve this:
+
+### Steps:
+
+1. **Install PostgreSQL:**
+   - Set up a centralized PostgreSQL database on a dedicated server that is accessible to all 100 machines. This can be your "centralized database server."
+
+2. **Configure PostgreSQL:**
+   - Configure PostgreSQL with the necessary database, user, and permissions for Apache Airflow.
+
+3. **Configure Airflow:**
+   - In each Airflow installation on the 100 machines, modify the `airflow.cfg` configuration file to point to the centralized PostgreSQL database.
+
+   ```ini
+   # airflow.cfg
+
+   executor = CeleryExecutor
+   sql_alchemy_conn = postgresql+psycopg2://your_postgres_user:your_postgres_password@centralized_db_host/your_database_name
+   ```
+
+   - Replace placeholders with your PostgreSQL connection details.
+
+4. **Initialize Airflow Metadata Database:**
+   - Run the following command on each Airflow machine to initialize the metadata database:
+
+   ```bash
+   airflow initdb
+   ```
+
+5. **Run Airflow Scheduler and Workers:**
+   - Start the Airflow scheduler and workers on each machine. Tasks will be distributed across machines, and metadata will be stored centrally in the PostgreSQL database.
+
+### Considerations:
+
+- Ensure that the centralized PostgreSQL server is properly configured to handle the connection load from all Airflow instances.
+
+- Network latency and connectivity between the Airflow instances and the PostgreSQL server should be considered for optimal performance.
+
+- Choose appropriate security measures, such as firewalls and access controls, to secure the centralized PostgreSQL database.
+
+- Regularly backup the PostgreSQL database to prevent data loss.
+
+By centralizing the metadata database, you reduce the complexity of managing multiple databases across 100 machines. This setup allows you to have a single source of truth for metadata storage while distributing the task execution across the Airflow instances on different machines.
+
+Running the `airflow initdb` command on multiple machines could potentially lead to data duplication or conflicts if not managed properly. The `initdb` command initializes the Airflow metadata database by creating tables and populating initial data. Here are some considerations to avoid issues:
+
+1. **Initialization Strategy:**
+   - Consider whether you want to initialize the metadata database separately on each machine or if you only need to do it once on a single machine. The choice depends on your use case and whether you want independent Airflow instances on each machine.
+
+2. **Shared Metadata Database:**
+   - If you are using a shared, centralized PostgreSQL database for metadata storage (as discussed earlier), you typically only need to run `initdb` once on any of the machines. Subsequent executions on other machines could result in conflicts or errors.
+
+3. **Isolated Airflow Instances:**
+   - If each machine is intended to have an independent Airflow instance with its own metadata database, then running `initdb` on each machine is appropriate. However, tasks and metadata would be isolated on each machine.
+
+4. **Duplicate Records:**
+   - If `initdb` is run independently on each machine against the same metadata database, it may lead to duplicate records, as each instance would attempt to create the same tables and populate initial data.
+
+### Recommendations:
+
+- **Shared Metadata Database:**
+  - For a shared metadata database, consider running `initdb` only once on a single machine and then connecting all Airflow instances to the centralized database.
+
+- **Independent Airflow Instances:**
+  - If each machine is intended to have an independent Airflow instance, be cautious about data isolation and ensure that tasks and metadata are kept separate.
+
+- **Automated Deployment:**
+  - In large-scale deployments, consider using automated deployment tools or scripts to ensure consistent setup across all machines. This helps in avoiding manual errors.
+
+- **Database Backup:**
+  - Before making significant changes like running `initdb`, ensure you have a backup of the metadata database to recover in case of any issues.
+
+Choose the approach that aligns with your deployment strategy, whether it involves centralized or independent metadata databases for Airflow instances on each machine. It's crucial to have a clear plan and understanding of your deployment architecture to avoid data conflicts and inconsistencies.
