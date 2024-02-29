@@ -246,3 +246,76 @@ In this example:
 3. The `sudo cgexec -g memory:/my_cgroup` part of the command sets up the cgroup configuration, and `bash -c '{}'` executes the Bash script content.
 
 Please note that using `sudo` within the `BashOperator` may require additional configuration in the Airflow environment, and the user running Airflow should have the necessary permissions to execute `sudo` commands. Ensure that your cgroup configuration is set up appropriately for your resource management needs. Adjust the script and cgroup configurations based on your specific requirements.
+
+
+Yes, you can run 1000 Bash scripts in Apache Airflow and summarize their progress, runtime, and pass/fail reports. Apache Airflow provides mechanisms for managing and monitoring the execution of tasks, including Bash scripts, within a DAG (Directed Acyclic Graph).
+
+Here's a simplified example of how you might structure an Airflow DAG to run and summarize the execution of multiple Bash scripts:
+
+```python
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+
+default_args = {
+    'owner': 'your_username',
+    'start_date': datetime(2022, 1, 1),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'batch_bash_scripts_dag',
+    default_args=default_args,
+    description='DAG for running and summarizing multiple Bash scripts',
+    schedule_interval=None,
+)
+
+# List of Bash scripts to run
+bash_scripts = [
+    '/path/to/script1.sh',
+    '/path/to/script2.sh',
+    # Add more scripts as needed
+]
+
+def run_bash_script(script_path):
+    """
+    Function to run a Bash script and capture its runtime, success/failure status, etc.
+    Add custom logic for summarization.
+    """
+    # Implement your logic to run the Bash script and capture information
+    # Example: You can use subprocess or any other method to execute the script
+    # ...
+
+with dag:
+    # Loop through the list of Bash scripts and create tasks dynamically
+    for script_path in bash_scripts:
+        task_id = f'run_script_{script_path.replace("/", "_").replace(".", "_")}'
+        
+        # BashOperator to run the script
+        run_script_task = BashOperator(
+            task_id=task_id,
+            bash_command=f'bash {script_path}',
+            dag=dag,
+        )
+
+        # PythonOperator to summarize the execution
+        summarize_task = PythonOperator(
+            task_id=f'summarize_{task_id}',
+            python_callable=run_bash_script,
+            op_args=[script_path],
+            dag=dag,
+        )
+
+        # Set task dependencies
+        run_script_task >> summarize_task
+```
+
+In this example:
+
+- The `bash_scripts` list contains the paths to your 1000 Bash scripts.
+- For each script, a `BashOperator` is created to run the script, and a `PythonOperator` is used to call a Python function (`run_bash_script`) that can capture and summarize the execution details.
+- You need to implement the `run_bash_script` function to include logic for running the Bash script, capturing runtime, and determining success/failure.
+
+This is a basic example, and you may need to adapt it based on the specific details of your use case, such as capturing runtime, handling errors, and summarizing results. Additionally, consider breaking down the execution into smaller batches or parallelizing it depending on your resource constraints.
