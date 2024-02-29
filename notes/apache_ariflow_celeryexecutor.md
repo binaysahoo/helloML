@@ -171,3 +171,30 @@ As of my last knowledge update:
 
 **Important Note:**
 The information provided is based on the state of Apache Airflow as of January 2022. Since the software landscape evolves, it's recommended to check the official Apache Airflow documentation or community discussions for any updates or changes beyond that date. Additionally, there may be newer versions of Airflow or community-supported projects that provide alternative executors or integration points.
+
+
+In a setup with 100 machines, you typically install Apache Airflow on each machine where you want to run tasks. While it's possible to centralize some parts of the Airflow installation (such as the codebase and configuration files) on a shared file system like NFS, the actual execution of tasks often occurs on the local machines where Airflow is installed.
+
+Here are some considerations:
+
+1. **Shared Codebase and Configurations:**
+   - You can centralize the Airflow codebase, DAGs, and configuration files on a shared file system accessible by all machines. This can simplify maintenance and ensure consistency across the environment.
+
+2. **Local Installation:**
+   - Each machine in the setup should have its own local installation of Apache Airflow. This includes the necessary dependencies, libraries, and Airflow binaries.
+
+3. **Distributed Executors:**
+   - If you're using a distributed executor like Celery, the workers are deployed on each machine and require a local Airflow installation.
+
+4. **Local Metadata Database:**
+   - Each Airflow installation typically has its own local metadata database (such as PostgreSQL or MySQL) to store metadata related to DAGs, tasks, and task instances.
+
+5. **Concurrency and Isolation:**
+   - Having local installations allows for better concurrency and isolation. Each machine can independently execute tasks without relying on a centralized point of control.
+
+6. **Logging and Task Execution:**
+   - Task execution and logging often occur locally. Tasks are executed on the machine where the worker is running, and logs are generated locally.
+
+In summary, while you can centralize code and configurations, it's common to have local installations of Apache Airflow on each machine for task execution. The shared file system is mainly used for code synchronization and configuration management. This approach provides flexibility, scalability, and isolation for task execution across the distributed environment.
+
+
