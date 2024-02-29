@@ -1,5 +1,11 @@
 ## https://www.datamation.com/applications/apache-airflow-review/
 
+## https://www.datamation.com/big-data/data-pipeline-design/ 
+
+## https://dagster.io/
+
+## https://github.com/spotify/luigi
+
 Apache Airflow Review 2024: Pricing, Features, Alternatives
 HomeApplications
 Leon Yen
