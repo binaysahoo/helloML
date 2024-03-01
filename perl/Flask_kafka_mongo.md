@@ -1,3 +1,5 @@
+## https://kafka.apache.org/37/documentation/streams/quickstart
+
 Certainly, if you've decided to use Apache Kafka for your scenario of handling thousands of concurrent requests and writing to MongoDB through a REST API, here's a high-level guide on how you might structure your solution:
 
 1. **Install Required Packages:**
