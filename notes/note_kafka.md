@@ -5,6 +5,9 @@
 ## API https://cwiki.apache.org/confluence/display/KAFKA/Clients 
 
 ## PYTHON API : https://docs.confluent.io/kafka-clients/python/current/overview.html
+
+## https://kafka.apache.org/20/protocol.html
+
 Apache Kafka
 GET STARTED
 DOCS
