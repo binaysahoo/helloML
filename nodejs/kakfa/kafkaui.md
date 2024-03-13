@@ -3,6 +3,7 @@
 java -Dspring.config.additional-location=kafkaui/kafka-ui-api/src/main/resources/application-local.yml -jar kafka-ui-api-v0.7.1.jar 
 
 
+## https://github.com/obsidiandynamics/kafdrop/releases/download/4.0.1/kafdrop-4.0.1.jar
 
 
 # cd  /Users/binaysahoo/workspace/apachesoft/kafka/kafka/3.7.0/libexec
