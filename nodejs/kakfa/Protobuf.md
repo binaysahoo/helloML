@@ -79,6 +79,75 @@ Make sure Kafka is running, and create the 'user-topic' topic as mentioned in th
 
 Execute the producer and consumer scripts in separate terminals:
 
+
+Certainly! Here's a basic example of a Node.js Kafka producer and consumer using protobuf and gRPC.
+
+### Node.js Kafka Producer with Protobuf and gRPC:
+
+```javascript
+const kafka = require('kafka-node');
+const { YourProtoMessage } = require('./your_proto_file'); // Import your protobuf-generated message
+
+const Producer = kafka.Producer;
+const client = new kafka.KafkaClient({ kafkaHost: 'your_kafka_broker' });
+const producer = new Producer(client);
+
+producer.on('ready', () => {
+  const message = new YourProtoMessage({/* Your protobuf message fields */});
+  const payload = message.serializeBinary();
+
+  const payloads = [
+    {
+      topic: 'your_topic',
+      messages: payload,
+    },
+  ];
+
+  producer.send(payloads, (err, data) => {
+    if (err) {
+      console.error('Error sending message:', err);
+    } else {
+      console.log('Message sent successfully:', data);
+    }
+  });
+});
+
+producer.on('error', (err) => {
+  console.error('Error initializing producer:', err);
+});
+```
+
+### Node.js Kafka Consumer with Protobuf and gRPC:
+
+```javascript
+const kafka = require('kafka-node');
+const { YourProtoMessage } = require('./your_proto_file'); // Import your protobuf-generated message
+
+const Consumer = kafka.Consumer;
+const client = new kafka.KafkaClient({ kafkaHost: 'your_kafka_broker' });
+
+const topics = [{ topic: 'your_topic' }];
+const options = { autoCommit: true, fetchMaxWaitMs: 1000, fetchMaxBytes: 1024 * 1024 };
+
+const consumer = new Consumer(client, topics, options);
+
+consumer.on('message', (message) => {
+  const receivedMessage = YourProtoMessage.deserializeBinary(message.value);
+  console.log('Received message:', receivedMessage.toObject());
+});
+
+consumer.on('error', (err) => {
+  console.error('Error in Kafka consumer:', err);
+});
+
+consumer.on('offsetOutOfRange', (err) => {
+  console.error('Offset out of range error in Kafka consumer:', err);
+});
+```
+
+Make sure to replace placeholders like `'your_kafka_broker'`, `'your_topic'`, and adjust the protobuf message and file according to your project's specifics. Also, ensure that you have the necessary npm packages installed (`kafka-node`, `protobufjs`, etc.).
+
+
 ```bash
 node producer.js
 ```
