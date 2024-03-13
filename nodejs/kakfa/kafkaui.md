@@ -75,3 +75,4 @@ This is my second event
 2024-03-13 20:40:20.570  INFO 27546 [           main] o.s.b.StartupInfoLogger                  : Started Kafdrop in 2.045 seconds (process running for 2.528)
 
 
+
