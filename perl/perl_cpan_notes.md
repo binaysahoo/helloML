@@ -106,3 +106,57 @@ Visit [CPAN Upload](https://pause.perl.org/pause/authenquery?ACTION=add_uri) and
 After successfully uploading, your module will be available on CPAN for others to install using tools like `cpan` or `cpanm`.
 
 Remember to refer to the [CPAN Author's FAQ](https://www.cpan.org/authors/id/A/AN/ANDK/uploads/) for more details and best practices.
+
+
+Certainly! You can use `Build.PL` instead of `Makefile.PL` to create a build script for your Perl module. The choice between `Build.PL` and `Makefile.PL` often depends on the build system you prefer. Here's how you can adapt the previous example to use `Build.PL`:
+
+### 1. Write a `Build.PL` script:
+
+Create a `Build.PL` script for your module. It might look like this:
+
+```perl
+use Module::Build;
+
+my $build = Module::Build->new(
+    module_name => 'My::Module',
+    license     => 'perl',
+    requires    => {},
+);
+
+$build->create_build_script();
+```
+
+### 2. Write your Perl module and test files:
+
+Follow steps 2 and 3 from the previous instructions to write your module and test files.
+
+### 3. Write metadata files:
+
+Follow step 4 from the previous instructions to create `META.json` and `META.yml` files.
+
+### 4. Test your module locally:
+
+Use the following commands to test your module locally:
+
+```bash
+perl Build.PL
+./Build
+./Build test
+./Build install
+```
+
+### 5. Create a distribution archive:
+
+Run the following command to create a distribution archive (e.g., `My-Module-0.01.tar.gz`):
+
+```bash
+./Build dist
+```
+
+### 6. Upload to CPAN:
+
+Visit [CPAN Upload](https://pause.perl.org/pause/authenquery?ACTION=add_uri) and follow the instructions to upload your distribution. You'll need a PAUSE (Perl Authors Upload Server) account.
+
+After successfully uploading, your module will be available on CPAN for others to install using tools like `cpan` or `cpanm`.
+
+Using `Build.PL` is an alternative to `Makefile.PL`, and both approaches are valid for creating Perl modules for CPAN. Choose the one that suits your preferences and workflow.
