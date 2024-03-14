@@ -23,6 +23,10 @@ Next, compile this `.proto` file into JavaScript using the Protocol Buffers comp
 
 ```bash
 protoc --proto_path=. --js_out=import_style=commonjs,binary:. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` calculator.proto
+
+or
+
+protoc --js_out=import_style=commonjs,binary:. calculator.proto
 ```
 
 This will generate two JavaScript files: `calculator_pb.js` and `calculator_grpc_pb.js`.
