@@ -158,7 +158,7 @@ node consumer.js
 
 Now, the Node.js producer sends a Protobuf-serialized message to the 'user-topic' Kafka topic, and the consumer receives and deserializes the message, processing the user data in a microservices architecture.
 
-### another protobuf
+### another protobuf  hello.proto
 ```protobuf
 syntax = "proto3";
 
