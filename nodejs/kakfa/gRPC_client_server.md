@@ -26,6 +26,14 @@ protoc --proto_path=. --js_out=import_style=commonjs,binary:. --grpc_out=. --plu
 
 or
 
+npm install grpc-tools
+
+protoc --proto_path=. --js_out=import_style=commonjs,binary:. --grpc_out=. --plugin=protoc-gen-grpc=./kafka/node_modules/grpc-tools/bin/grpc_node_plugin calculator.proto
+
+or
+
+protoc --js_out=import_style=commonjs,binary:. calculator.proto
+
 protoc --js_out=import_style=commonjs,binary:. calculator.proto
 ```
 
