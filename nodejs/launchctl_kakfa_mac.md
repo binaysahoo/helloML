@@ -21,8 +21,8 @@ To start Kafka server automatically when restarting your Mac, you can create a l
        <string>com.kafka.server</string>
        <key>ProgramArguments</key>
        <array>
-           <string>/path/to/kafka/bin/kafka-server-start.sh</string>
-           <string>/path/to/kafka/config/server.properties</string>
+         <string>/Users/binaysahoo/workspace/apachesoft/kafka/kafka/3.7.0/libexec/bin/kafka-server-start.sh</string>
+         <string>/Users/binaysahoo/workspace/apachesoft/kafka/kafka/3.7.0/libexec/config/kraft/server.properties</string>
        </array>
        <key>RunAtLoad</key>
        <true/>
